@@ -3,6 +3,7 @@ package com.example.bookmyshow.services;
 import com.example.bookmyshow.exceptions.ShowSeatsNotFoundException;
 import com.example.bookmyshow.exceptions.UserNotFoundException;
 import com.example.bookmyshow.models.*;
+import com.example.bookmyshow.repositories.BookingRepository;
 import com.example.bookmyshow.repositories.ShowSeatRepository;
 import com.example.bookmyshow.repositories.UserRepository;
 import org.springframework.stereotype.Service;
@@ -19,11 +20,14 @@ public class BookingService {
     private UserRepository userRepository;
     private ShowSeatRepository showSeatRepository;
     private PriceCalculatorService priceCalculatorService;
+    private BookingRepository bookingRepository;
 
-    public BookingService(UserRepository userRepository, ShowSeatRepository showSeatRepository, PriceCalculatorService priceCalculatorService) {
+    public BookingService(UserRepository userRepository, ShowSeatRepository showSeatRepository, PriceCalculatorService priceCalculatorService
+    , BookingRepository bookingRepository) {
         this.userRepository = userRepository;
         this.showSeatRepository = showSeatRepository;
         this.priceCalculatorService = priceCalculatorService;
+        this.bookingRepository = bookingRepository;
     }
 
 
@@ -61,6 +65,6 @@ public class BookingService {
         booking.setBookingStatus(BookingStatus.PENDING);
         booking.setAmount(priceCalculatorService.calculatePrice(savedShowSeats));
 
-        return booking;
+        return bookingRepository.save(booking);
     }
 }
